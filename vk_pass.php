@@ -3,7 +3,7 @@
 Plugin Name: VKPass Özel Player (Ücretsiz)
 Plugin URI: http://vkpass.com
 Description: VKPass player ile vk.com, ok.ru, google plus & picasa, vimeo, dailymation, youtube, izlesene, mynettv, myvideo.az vb sitelerdeki videoları size özel playerda oynatabilirsiniz. Ayrıntılı bilgi: http://vkpass.com/
-Version: 1.0
+Version: 1.2
 Author: Vidrame
 Author URI: http://vkpass.com
 License: GPL2
@@ -14,8 +14,8 @@ define('VK_PASS_PATH', plugin_dir_path(__FILE__));
 
 define ("PLUGIN_NAME", "VKPass Özel Player (Ücretsiz)");
 define ("PLUGIN_NICK", "wp_vkpass");
-define ("PLUGIN_VERSION", "1.0");
-define ("PLUGIN_DB_VERSION", "1.0");
+define ("PLUGIN_VERSION", "1.2");
+define ("PLUGIN_DB_VERSION", "1.2");
 define ("PLUGIN_DIR_NAME", trim(basename(dirname(__FILE__), '/' )));
 define ("PLUGIN_URL", plugin_dir_url(__FILE__)); // already has trailing slash
 define ("PLUGIN_PATH", plugin_dir_path(__FILE__)); // already has trailing slash
