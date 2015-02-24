@@ -1,4 +1,4 @@
-﻿﻿=== VKPass Özel Player (Ücretsiz) ===
+﻿=== VKPass Özel Player (Ücretsiz) ===
 Contributors: vkpass
 Tags: vk.com, ok.ru, google plus, picasa, vimeo, dailymation, youtube, izlesene, mynettv, myvideo.az
 Requires at least: 4.0
