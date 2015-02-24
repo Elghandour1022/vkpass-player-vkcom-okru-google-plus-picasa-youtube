@@ -3,8 +3,8 @@
 Plugin Name: VKPass Özel Player (Ücretsiz)
 Plugin URI: http://vkpass.com
 Description: VKPass player ile vk.com, ok.ru, google plus & picasa, vimeo, dailymation, youtube, izlesene, mynettv, myvideo.az vb sitelerdeki videoları size özel playerda oynatabilirsiniz. Ayrıntılı bilgi: http://vkpass.com/
-Version: 1.5
-Author: VKPass
+Version: 1.2
+Author: Vidrame
 Author URI: http://vkpass.com
 License: GPL2
 */
@@ -14,8 +14,8 @@ define('VK_PASS_PATH', plugin_dir_path(__FILE__));
 
 define ("PLUGIN_NAME", "VKPass Özel Player (Ücretsiz)");
 define ("PLUGIN_NICK", "wp_vkpass");
-define ("PLUGIN_VERSION", "1.5");
-define ("PLUGIN_DB_VERSION", "1.5");
+define ("PLUGIN_VERSION", "1.2");
+define ("PLUGIN_DB_VERSION", "1.2");
 define ("PLUGIN_DIR_NAME", trim(basename(dirname(__FILE__), '/' )));
 define ("PLUGIN_URL", plugin_dir_url(__FILE__)); // already has trailing slash
 define ("PLUGIN_PATH", plugin_dir_path(__FILE__)); // already has trailing slash
@@ -88,69 +88,74 @@ class vk_pass {
     public function options_do_page() {
         $options = get_option($this->option_name);
         ?>
-        <style>
-	        .vkpass_info {
-				background: #FFF;
-				border-left: 4px solid #FFF;
-				-webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-				box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-				padding: 5px 0 10px 15px;
-				border-color: #eeee1b;
-	        }
-        </style>
+        <link rel="stylesheet" id="wp-fastest-cache-css" href="<?php echo plugin_dir_url(__FILE__); ?>style.css" type="text/css" media="all">
+        
         <div class="wrap">
-            <h2>VKPass Options</h2><hr><br>
-            
-            <h3>Token Kodu</h3><hr>
-			<tr>
-				<td colspan="2">
-					<div class="vkpass_info">VKPass Playeri kendinize özel düzenlemek için, sitemize üye olarak panelinizdeki token kodunuzu buraya giriniz. Tüm player özelliştirmelerini sitemizdeki panelinizden yapabilirsiniz.</div>
-				</td>
-			</tr>
-            <form method="post" action="options.php">
-                <?php settings_fields('vkp_list_options'); ?>
-                <table class="form-table">
-                    <tr valign="top"><th scope="row">Token Kodunuz:</th>
-                        <td><input type="text" name="<?php echo $this->option_name?>[vkp_TOKEN]" value="<?php echo $options['vkp_TOKEN']; ?>" /></td>
-                    </tr>
-                </table>
-				
-				<br><h3>Kaynak Şifreleme</h3><hr>
-				<table class="form-table">
-					<tr>
-						<td colspan="2">
-							<div class="vkpass_info">Kaynaklarınızın başkası tarafından görülmesini(çalınmasını) istemiyorsanız bu alanı aktif yapabilirsiniz. Gireceğiniz bilgiler vkpass.com'a kayıt olduğunuz mail ve şifrenizdir.</div>
-						</td>
-					</tr>
-                    <tr valign="top"><th scope="row">Kaynak Şifreleme AÇIK/KAPALI:</th>
-                        <td><input class="hasher_check" type="checkbox" name="<?php echo $this->option_name?>[vkp_sifreleme]"<?php if($options['vkp_sifreleme'] == "on") {echo ' checked="checked"';} ?> ></td>
-                    </tr>
-                    <tr class="hasher_infos" valign="top"><th scope="row">VKPass Mail:</th>
-                        <td><input type="text" name="<?php echo $this->option_name?>[vkp_MAIL]" value="<?php echo $options['vkp_MAIL']; ?>" /></td>
-                    </tr>
-                    <tr class="hasher_infos" valign="top"><th scope="row">VKPass Şifre:</th>
-                        <td><input type="password" name="<?php echo $this->option_name?>[vkp_PASS]" value="<?php echo $options['vkp_PASS']; ?>" /></td>
-                    </tr>
-				</table>
-
-				<!--<br><h3>Player Boyutları</h3><hr>
-				<table class="form-table">
-					<tr>
-						<td colspan="2">
-							<div class="vkpass_info">Player boyutlandırma sadece "Kaynak Şifreleme" aktif olduğunda çalışır.</div>
-						</td>
-					</tr>
-                    <tr valign="top"><th scope="row">Player Genişliği:</th>
-                        <td><input type="text" name="<?php echo $this->option_name?>[vkp_player_width]" value="<?php echo $options['vkp_player_width']; ?>" /></td>
-                    </tr>
-                    <tr valign="top"><th scope="row">Player Yüksekliği:</th>
-                        <td><input type="text" name="<?php echo $this->option_name?>[vkp_player_height]" value="<?php echo $options['vkp_player_height']; ?>" /></td>
-                    </tr>
-                </table>-->
-                <p class="submit">
-                    <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
-                </p>
-            </form>
+	        <form method="post" action="options.php">
+	            <h2>VKPass Options</h2><hr><br>
+	            <div class="tabGroup">
+		            <input checked="checked" type="radio" id="wpfc-options" name="tabGroup1">
+		            <label for="wpfc-options">Genel Ayarlar</label>
+		            <input type="radio" id="wpfc-deleteCache" name="tabGroup1">
+		            <label for="wpfc-deleteCache">Link Şifreleme</label>
+					<div class="tab1">
+						<?php settings_fields('vkp_list_options'); ?>
+						
+						<div class="vkpass_info">VKPass Playeri kendinize özel düzenlemek için, sitemize üye olarak panelinizdeki token kodunuzu buraya giriniz. Tüm player özelliştirmelerini sitemizdeki panelinizden yapabilirsiniz.</div>
+						
+						<div class="questionCon">
+							<div class="question">Token Kodu</div>
+							<div class="inputCon"><input type="text" name="<?php echo $this->option_name?>[vkp_TOKEN]" value="<?php echo $options['vkp_TOKEN']; ?>" /></div>
+						</div>
+						
+						
+						<div class="questionCon qsubmit">
+			                <div class="submit">
+			                    <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+			                </div>
+						</div>
+					</div>
+					<div class="tab2">
+						<div class="vkpass_info">Kaynaklarınızın başkası tarafından görülmesini(çalınmasını) istemiyorsanız bu alanı aktif yapabilirsiniz. Gireceğiniz bilgiler vkpass.com'a kayıt olduğunuz mail ve şifrenizdir.</div>
+						
+						<div class="questionCon">
+							<div class="question">Kaynak Şifreleme</div>
+							<div class="inputCon"><input class="hasher_check" type="checkbox" name="<?php echo $this->option_name?>[vkp_sifreleme]"<?php if($options['vkp_sifreleme'] == "on") {echo ' checked="checked"';} ?> ></div>
+						</div>
+						<div class="questionCon">
+							<div class="question">VKPass Mail</div>
+							<div class="inputCon"><input type="text" name="<?php echo $this->option_name?>[vkp_MAIL]" value="<?php echo $options['vkp_MAIL']; ?>" /></div>
+						<div class="questionCon">
+						</div>
+							<div class="question">VKPass Şifre</div>
+							<div class="inputCon"><input type="password" name="<?php echo $this->option_name?>[vkp_PASS]" value="<?php echo $options['vkp_PASS']; ?>" /></div>
+						</div>
+						
+						
+						<div class="questionCon qsubmit">
+			                <div class="submit">
+			                    <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+			                </div>
+						</div>
+					</div>
+				</div>
+				<div class="omni_admin_sidebar">
+					<div class="omni_admin_sidebar_section">
+					<h3>Kişiselleştirme</h3>
+					<ul>
+				    	<li>
+				    		<label><a target="_blank" href="http://vkpass.com/panel">Buradan</a> panelinizi ziyaret edin.</a>
+				    	</li>
+				    	<li>
+				    		<label>Panelde size verilen Token kodunu Genel Ayarlardan buraya kaydedin.</label>
+				    	</li>
+				    	<li>
+				    		<label>Bundan sonra tüm kişiselleştirme işlemlerini VKPass Panelinizden yapabiliriniz</label>
+				    	</li>
+				  	</ul>
+				  </div>
+				</div>
+			</form>
         </div>
         <script>
 	        var hasher_check = document.getElementsByClassName("hasher_check")[0];
