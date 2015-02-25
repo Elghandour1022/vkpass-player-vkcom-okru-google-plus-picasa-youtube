@@ -3,7 +3,7 @@ Contributors: vkpass
 Tags: vk.com, ok.ru, google plus, picasa, vimeo, dailymation, youtube, izlesene, mynettv, myvideo.az
 Requires at least: 4.0
 Tested up to: 4.1.1
-Stable tag: 1.6
+Stable tag: 1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,11 +23,8 @@ Yapmanız gereken sadece aktif etmek ve ayarlar sayfasından gerekli ayarları y
 
 == Changelog ==
 
-= 1.3 =
+= 1.7 =
 * Güncellendi.
-
-= 1.1 =
-* İlk Güncelleme.
 
 = 1.0 =
 * Eklenti aktif edildi.

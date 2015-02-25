@@ -3,8 +3,8 @@
 Plugin Name: VKPass Özel Player (Ücretsiz)
 Plugin URI: http://vkpass.com
 Description: VKPass player ile vk.com, ok.ru, google plus & picasa, vimeo, dailymation, youtube, izlesene, mynettv, myvideo.az vb sitelerdeki videoları size özel playerda oynatabilirsiniz. Ayrıntılı bilgi: http://vkpass.com/
-Version: 1.6
-Author: Vidrame
+Version: 1.7
+Author: VKPass
 Author URI: http://vkpass.com
 License: GPL2
 */
@@ -14,8 +14,8 @@ define('VK_PASS_PATH', plugin_dir_path(__FILE__));
 
 define ("PLUGIN_NAME", "VKPass Özel Player (Ücretsiz)");
 define ("PLUGIN_NICK", "wp_vkpass");
-define ("PLUGIN_VERSION", "1.6");
-define ("PLUGIN_DB_VERSION", "1.6");
+define ("PLUGIN_VERSION", "1.7");
+define ("PLUGIN_DB_VERSION", "1.7");
 define ("PLUGIN_DIR_NAME", trim(basename(dirname(__FILE__), '/' )));
 define ("PLUGIN_URL", plugin_dir_url(__FILE__)); // already has trailing slash
 define ("PLUGIN_PATH", plugin_dir_path(__FILE__)); // already has trailing slash
@@ -88,16 +88,16 @@ class vk_pass {
     public function options_do_page() {
         $options = get_option($this->option_name);
         ?>
-        <link rel="stylesheet" id="wp-fastest-cache-css" href="<?php echo plugin_dir_url(__FILE__); ?>style.css" type="text/css" media="all">
+        <link rel="stylesheet" id="wp-fastest-cache-css" href="<?php echo plugin_dir_url(__FILE__); ?>style.css?v=021" type="text/css" media="all">
         
         <div class="wrap">
 	        <form method="post" action="options.php">
 	            <h2>VKPass Options</h2><hr><br>
 	            <div class="tabGroup">
-		            <input checked="checked" type="radio" id="wpfc-options" name="tabGroup1">
-		            <label for="wpfc-options">Genel Ayarlar</label>
-		            <input type="radio" id="wpfc-deleteCache" name="tabGroup1">
-		            <label for="wpfc-deleteCache">Link Şifreleme</label>
+		            <input checked="checked" type="radio" id="vkp-options" name="tabGroup1">
+		            <label for="vkp-options">Genel Ayarlar</label>
+		            <input type="radio" id="vkp-hashLink" name="tabGroup1">
+		            <label for="vkp-hashLink">Link Şifreleme</label>
 					<div class="tab1">
 						<?php settings_fields('vkp_list_options'); ?>
 						
