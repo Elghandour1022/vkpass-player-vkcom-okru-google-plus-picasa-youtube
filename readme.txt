@@ -3,7 +3,7 @@ Contributors: vkpass
 Tags: vk.com, ok.ru, google plus, picasa, vimeo, dailymation, youtube, izlesene, mynettv, myvideo.az
 Requires at least: 4.0
 Tested up to: 4.1.1
-Stable tag: 1.7
+Stable tag: 1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,8 +23,11 @@ Yapmanız gereken sadece aktif etmek ve ayarlar sayfasından gerekli ayarları y
 
 == Changelog ==
 
-= 1.7 =
-* Güncellendi.
+= 1.8 =
+* Wordpress yazı editörününe hızlı video linki ekleme butonu eklendi.
+* Multi dil seçeneği eklendi.
+* Site kategorisi seçme eklendi.
+* Performans ve stabilite için birkaç çalışma yapıldı.
 
 = 1.0 =
 * Eklenti aktif edildi.
