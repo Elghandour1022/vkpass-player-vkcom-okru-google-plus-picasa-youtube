@@ -3,7 +3,7 @@
 Plugin Name: VKPass Özel Player (Ücretsiz)
 Plugin URI: http://vkpass.com
 Description: VKPass player ile vk.com, ok.ru, google plus & picasa, vimeo, dailymation, youtube, izlesene, mynettv, myvideo.az vb sitelerdeki videoları size özel playerda oynatabilirsiniz. Ayrıntılı bilgi: http://vkpass.com/
-Version: 1.8
+Version: 1.9
 Author: VKPass
 Author URI: http://vkpass.com
 License: GPL2
@@ -15,8 +15,8 @@ define('VK_PASS_PATH', plugin_dir_path(__FILE__));
 
 define ("PLUGIN_NAME", "VKPass Özel Player (Ücretsiz)");
 define ("PLUGIN_NICK", "wp_vkpass");
-define ("PLUGIN_VERSION", "1.8");
-define ("PLUGIN_DB_VERSION", "1.8");
+define ("PLUGIN_VERSION", "1.9");
+define ("PLUGIN_DB_VERSION", "1.9");
 define ("PLUGIN_DIR_NAME", trim(basename(dirname(__FILE__), '/' )));
 define ("PLUGIN_URL", plugin_dir_url(__FILE__)); // already has trailing slash
 define ("PLUGIN_PATH", plugin_dir_path(__FILE__)); // already has trailing slash
@@ -43,6 +43,7 @@ class vk_pass {
         'vkp_TYPE' => '',
         'vkp_LANG' => '',
         'vkp_sifreleme' => '',
+        'vkp_ebutton' => '',
         'vkp_MAIL' => '',
         'vkp_PASS' => '',
         'vkp_player_width' => '100%',
@@ -109,6 +110,11 @@ class vk_pass {
 						<div class="vkpass_info"><?php echo __s("Playerı kişiselleştirmek için, sitemizden VKPass Paneline üye olarak token kodunu buraya girmeniz gerekmektedir.", "If you would like to personalize your Player, you have to register VKPass Panel in our website and write the token code here."); ?></div>
 						
 						<div class="questionCon">
+							<div class="question"><?php echo __s("VKPass Butonu", "VKPass Button"); ?></div>
+							<div class="inputCon"><input type="checkbox" name="<?php echo $this->option_name?>[vkp_ebutton]"<?php if($options['vkp_ebutton'] == "on") {echo ' checked="checked"';} ?> > <?php echo __s("Wordpress yazı düzenleyicisinde VKPass iframe butonunu göster.", "Activate VKPass iframe button in Wordpress post editor."); ?></div>
+						</div>
+						
+						<div class="questionCon">
 							<div class="question"><?php echo __s("Token Kodu", "Token Code"); ?></div>
 							<div class="inputCon"><input type="text" name="<?php echo $this->option_name?>[vkp_TOKEN]" value="<?php echo $options['vkp_TOKEN']; ?>" /></div>
 						</div>
@@ -136,7 +142,7 @@ class vk_pass {
 						
 						<div class="questionCon">
 							<div class="question"><?php echo __s("Link Şifreleme", "Link Hash"); ?></div>
-							<div class="inputCon"><input class="hasher_check" type="checkbox" name="<?php echo $this->option_name?>[vkp_sifreleme]"<?php if($options['vkp_sifreleme'] == "on") {echo ' checked="checked"';} ?> ></div>
+							<div class="inputCon"><input class="hasher_check" type="checkbox" name="<?php echo $this->option_name?>[vkp_sifreleme]"<?php if($options['vkp_sifreleme'] == "on") {echo ' checked="checked"';} ?> > <?php echo __s("Link şifreleme aktif edilsin mi?", "Would you like to activate link hasher?"); ?></div>
 						</div>
 						<div class="questionCon">
 							<div class="question"><?php echo __s("VKPass Mail", "VKPass Mail"); ?></div>
@@ -233,6 +239,7 @@ class vk_pass {
         $valid['vkp_MAIL'] = sanitize_text_field($input['vkp_MAIL']);
         $valid['vkp_PASS'] = sanitize_text_field($input['vkp_PASS']);
         $valid['vkp_sifreleme'] = sanitize_text_field($input['vkp_sifreleme']);
+        $valid['vkp_ebutton'] = sanitize_text_field($input['vkp_ebutton']);
         $valid['vkp_player_width'] = sanitize_text_field($input['vkp_player_width']);
         $valid['vkp_player_height'] = sanitize_text_field($input['vkp_player_height']);
 		
@@ -263,55 +270,81 @@ if($result['vkp_sifreleme'] == "on") {
 		$SRCS = explode("src='", $CONTENT);
 		array_shift($SRCS);
 		
-		if(isset($result["vkp_TYPE"])) {
+		if(isset($result["vkp_TYPE"]))
 			$main_domain = $main_domains[$result["vkp_TYPE"]];
-			
-			if(sizeof($SRCS) > 0) {
-				foreach($SRCS as $SRC) {
-					$SRC = explode("'", $SRC);
-					$SRC = $SRC[0];
-	
-					foreach($domains as $domain) {
-						if(stripos($SRC, $domain)) {
-							$NEW_SRC = urlencode($SRC);
-							$NEW_SRC = @file_get_contents("http://{$main_domain}/token/{$TOKEN}/hashlink?mail={$MAIL}&pass={$PASS}&link={$NEW_SRC}");
-							$CONTENT = str_replace($SRC, $NEW_SRC, $CONTENT);
-							$CONTENT = str_replace("src=", "allowfullscreen src=", $CONTENT);
-						}
+		if(empty($main_domain)) $main_domain = $main_domains[0];
+		
+		if(sizeof($SRCS) > 0) {
+			foreach($SRCS as $SRC) {
+				$SRC = explode("'", $SRC);
+				$SRC = $SRC[0];
+
+				foreach($domains as $domain) {
+					if(stripos($SRC, $domain)) {
+						$NEW_SRC = urlencode($SRC);
+						$NEW_SRC = @file_get_contents("http://{$main_domain}/token/{$TOKEN}/hashlink?mail={$MAIL}&pass={$PASS}&link={$NEW_SRC}");
+						$CONTENT = str_replace($SRC, $NEW_SRC, $CONTENT);
+						$CONTENT = str_replace("src=", "allowfullscreen src=", $CONTENT);
 					}
 				}
 			}
-			
-			$SRCS = explode('src="', $CONTENT);
-			array_shift($SRCS);
-			if(sizeof($SRCS) > 0) {
-				foreach($SRCS as $SRC) {
-					$SRC = explode('"', $SRC);
-					$SRC = $SRC[0];
-	
-					foreach($domains as $domain) {
-						if(stripos($SRC, $domain)) {
-							$NEW_SRC = urlencode($SRC);
-							$NEW_SRC = @file_get_contents("http://{$main_domain}/token/{$TOKEN}/hashlink?mail={$MAIL}&pass={$PASS}&link={$NEW_SRC}");
-							$CONTENT = str_replace($SRC, $NEW_SRC, $CONTENT);
-							$CONTENT = str_replace("src=", "allowfullscreen src=", $CONTENT);
-						}
+		}
+		
+		$SRCS = explode('src="', $CONTENT);
+		array_shift($SRCS);
+		if(sizeof($SRCS) > 0) {
+			foreach($SRCS as $SRC) {
+				$SRC = explode('"', $SRC);
+				$SRC = $SRC[0];
+
+				foreach($domains as $domain) {
+					if(stripos($SRC, $domain)) {
+						$NEW_SRC = urlencode($SRC);
+						$NEW_SRC = @file_get_contents("http://{$main_domain}/token/{$TOKEN}/hashlink?mail={$MAIL}&pass={$PASS}&link={$NEW_SRC}");
+						$CONTENT = str_replace($SRC, $NEW_SRC, $CONTENT);
+						$CONTENT = str_replace("src=", "allowfullscreen src=", $CONTENT);
 					}
 				}
 			}
-        }
+		}
         
         return $CONTENT;
     }
 
 }
 
+if($result["vkp_ebutton"] == "on") {
+	add_filter('mce_buttons', 'myplugin_register_buttons');
+	
+	function myplugin_register_buttons($buttons) {
+	   array_push($buttons, 'separator', 'vkpass');
+	   return $buttons;
+	}
+	
+	add_filter('mce_external_plugins', 'myplugin_register_tinymce_javascript');
+	
+	function myplugin_register_tinymce_javascript($plugin_array) {
+	   $plugin_array['vkpass'] = plugins_url('/tinymce-plugin.js',__file__);
+	   return $plugin_array;
+	}
+	
+	function override_tinymce_option($initArray) {
+	    $opts = 'iframe[*]';
+	    $initArray['extended_valid_elements'] = $opts;
+	    return $initArray;
+	}
+	add_filter('tiny_mce_before_init', 'override_tinymce_option');
+}
+
+add_action('wp_head', 'vkp_head');
 function vkp_head () {
 	global $main_domains;
         
     $result = get_option('vkp_OPTION');
     $result_vkp_TOKEN = $result['vkp_TOKEN'] == "" ? 'cve0ejrnbrpq' : $result['vkp_TOKEN'];
     $main_domain = $main_domains[$result['vkp_TYPE']];
+    if(empty($main_domain)) $main_domain = $main_domains[0];
+    
     echo '<script>
   !function(d, h, s, id) { 
     var js, fjs = d.getElementsByTagName(h)[0];
@@ -325,44 +358,11 @@ function vkp_head () {
 </script>';
 }
 
-add_action('wp_head', 'vkp_head');
-
-function strposa($haystack, $needles=array()) {
-    $chr = array();
-    foreach($needles as $needle)
-    	if (stripos($haystack, $needle) !== false)
-    		return true;
-    return false;
-}
-
 function __s($tr, $en) {
 	$result = get_option('vkp_OPTION');
 	if($result["vkp_LANG"] == 1) return $tr;
 	else return $en;
 }
-
-// add new buttons
-add_filter('mce_buttons', 'myplugin_register_buttons');
-
-function myplugin_register_buttons($buttons) {
-   array_push($buttons, 'separator', 'vkpass');
-   return $buttons;
-}
- 
-// Load the TinyMCE plugin : editor_plugin.js (wp2.5)
-add_filter('mce_external_plugins', 'myplugin_register_tinymce_javascript');
-
-function myplugin_register_tinymce_javascript($plugin_array) {
-   $plugin_array['vkpass'] = plugins_url('/tinymce-plugin.js',__file__);
-   return $plugin_array;
-}
-
-function override_tinymce_option($initArray) {
-    $opts = 'iframe[*]';
-    $initArray['extended_valid_elements'] = $opts;
-    return $initArray;
-}
-add_filter('tiny_mce_before_init', 'override_tinymce_option');
 
 new vk_pass();
 ?>
