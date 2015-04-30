@@ -3,7 +3,7 @@
 Plugin Name: VKPass Özel Player (Ücretsiz)
 Plugin URI: http://vkpass.com
 Description: VKPass player ile vk.com, ok.ru, google plus & picasa, vimeo, dailymation, youtube, izlesene, mynettv, myvideo.az vb sitelerdeki videoları size özel playerda oynatabilirsiniz. Ayrıntılı bilgi: http://vkpass.com/
-Version: 1.9
+Version: 1.10
 Author: VKPass
 Author URI: http://vkpass.com
 License: GPL2
@@ -15,8 +15,8 @@ define('VK_PASS_PATH', plugin_dir_path(__FILE__));
 
 define ("PLUGIN_NAME", "VKPass Özel Player (Ücretsiz)");
 define ("PLUGIN_NICK", "wp_vkpass");
-define ("PLUGIN_VERSION", "1.9");
-define ("PLUGIN_DB_VERSION", "1.9");
+define ("PLUGIN_VERSION", "1.10");
+define ("PLUGIN_DB_VERSION", "1.10");
 define ("PLUGIN_DIR_NAME", trim(basename(dirname(__FILE__), '/' )));
 define ("PLUGIN_URL", plugin_dir_url(__FILE__)); // already has trailing slash
 define ("PLUGIN_PATH", plugin_dir_path(__FILE__)); // already has trailing slash
@@ -32,7 +32,7 @@ function vkp_settings_link($links) {
 $main_domains = array("vkpass.com", "xyzpass.com");
 
 $plugin = plugin_basename(__FILE__);
-add_filter("plugin_action_links_$plugin", 'vkp_settings_link');
+add_filter("plugin_action_links_$plugin", 'vkp_settings_link', 295);
 
 class vk_pass {
 
@@ -254,7 +254,7 @@ if($result['vkp_sifreleme'] == "on") {
 
 	$domains = array("vk.com", "ok.ru", "odnoklassniki.ru", "picasaweb.google.com", "plus.google.com", "myvideo.az");
 
-    add_filter('the_content','add_postdata_to_content');
+    add_filter('the_content','add_postdata_to_content', 296);
     function add_postdata_to_content($text) {
 	    global $post;
         global $domains;
@@ -314,14 +314,14 @@ if($result['vkp_sifreleme'] == "on") {
 }
 
 if($result["vkp_ebutton"] == "on") {
-	add_filter('mce_buttons', 'myplugin_register_buttons');
+	add_filter('mce_buttons', 'myplugin_register_buttons', 297);
 	
 	function myplugin_register_buttons($buttons) {
 	   array_push($buttons, 'separator', 'vkpass');
 	   return $buttons;
 	}
 	
-	add_filter('mce_external_plugins', 'myplugin_register_tinymce_javascript');
+	add_filter('mce_external_plugins', 'myplugin_register_tinymce_javascript', 298);
 	
 	function myplugin_register_tinymce_javascript($plugin_array) {
 	   $plugin_array['vkpass'] = plugins_url('/tinymce-plugin.js',__file__);
@@ -333,7 +333,7 @@ if($result["vkp_ebutton"] == "on") {
 	    $initArray['extended_valid_elements'] = $opts;
 	    return $initArray;
 	}
-	add_filter('tiny_mce_before_init', 'override_tinymce_option');
+	add_filter('tiny_mce_before_init', 'override_tinymce_option', 299);
 }
 
 add_action('wp_head', 'vkp_head');
