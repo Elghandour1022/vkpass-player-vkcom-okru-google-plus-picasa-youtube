@@ -9,7 +9,6 @@ Author URI: http://vkpass.com
 License: GPL2
 */
 
-error_reporting(0);
 define('VK_PASS_FILE', __FILE__);
 define('VK_PASS_PATH', plugin_dir_path(__FILE__));
 
